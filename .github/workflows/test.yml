@@ -108,7 +108,10 @@ jobs:
           pipenv install
       - name: Install C++
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: sudo apt-get install -y g++
+        run: sudo brew install g++
+      - name: g++ Version
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: g++ --version
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
