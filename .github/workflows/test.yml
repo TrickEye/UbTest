@@ -108,7 +108,7 @@ jobs:
           pipenv install
       - name: Install C++
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: sudo brew install g++
+        run: brew install g++
       - name: g++ Version
         if: steps.changed-files.outputs.any_changed == 'true'
         run: g++ --version
