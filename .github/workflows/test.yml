@@ -10,7 +10,7 @@ on:
 
 jobs:
   correctness:
-    name: OI-wiki Offline Test
+    name: OI-wiki Example Code Correctness Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
