@@ -112,9 +112,15 @@ jobs:
           brew install gcc@11
           brew install gcc@12
           brew install gcc@13
+          brew install gcc@14
       - name: g++ Version
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: g++ --version
+        run: | 
+          g++ --version
+          g++-11 --version
+          g++-12 --version
+          g++-13 --version
+          g++-14 --version
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
