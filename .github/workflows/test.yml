@@ -12,6 +12,9 @@ jobs:
   correctness:
     name: OI-wiki Example Code Correctness Check
     runs-on: ubuntu-latest
+    outputs:
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
+      files_to_test: ${{ steps.GetFiles.outputs.files_to_test }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,6 +43,10 @@ jobs:
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
+      - name: Get Files to Test
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: GetFiles
+        run: pipenv run python scripts/get_files_to_test.py
       - name: Check the Code
         if: steps.changed-files.outputs.any_changed == 'true'
         run: pipenv run python scripts/test.py 2> stderr.txt
@@ -83,8 +90,13 @@ jobs:
   undefinedbehaviors-macos:
     name: OI-wiki Undefined Behaviors Test - MacOS
     needs: correctness
+    if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: macos-latest
     steps:
+      - name: check output
+        env: 
+          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+        run: echo "${FILES_TO_TEST}"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -109,27 +121,12 @@ jobs:
       - name: Install C++
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          brew install gcc@11
-          brew install gcc@12
-          brew install gcc@13
           brew install gcc@14
-          brew install llvm@15
-          brew install llvm@16
-          brew install llvm@17
-          brew install llvm@18
       - name: g++ Version
         if: steps.changed-files.outputs.any_changed == 'true'
         run: | 
-          g++ --version
-          g++-11 --version
-          g++-12 --version
-          g++-13 --version
           g++-14 --version
-          clang++ --version
-          clang++-15 --version
-          clang++-16 --version
-          clang++-17 --version
-          clang++-18 --version
+          clang --version
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
