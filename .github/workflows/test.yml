@@ -51,7 +51,7 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         env: 
           FILES_TO_TEST: ${{ steps.GetFiles.outputs.files_to_test }}
-        run: pipenv run python scripts/correctness_check.py 2> stderr.txt
+        run: pipenv run python scripts/correctness_check.py
       # - name: Check the Code
       #   if: steps.changed-files.outputs.any_changed == 'true'
       #   run: pipenv run python scripts/test.py 2> stderr.txt
