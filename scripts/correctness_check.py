@@ -5,7 +5,7 @@
 import os
 import subprocess
 
-def correctness_check(mainfile, auxfile, example, skiptest, summary):
+def correctness_check(mainfile, auxfiles, examples, skiptest, summary):
     """
     Check correctness of one instance of example code.
     """
