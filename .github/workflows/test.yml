@@ -47,9 +47,14 @@ jobs:
         if: steps.changed-files.outputs.any_changed == 'true'
         id: GetFiles
         run: pipenv run python scripts/get_files_to_test.py
-      - name: Check the Code
+      - name: Correctness Check
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: pipenv run python scripts/test.py 2> stderr.txt
+        env: 
+          FILES_TO_TEST: ${{ steps.GetFiles.outputs.files_to_test }}
+        run: pipenv run python scripts/correctness_check.py 2> stderr.txt
+      # - name: Check the Code
+      #   if: steps.changed-files.outputs.any_changed == 'true'
+      #   run: pipenv run python scripts/test.py 2> stderr.txt
 
   undefinedbehaviors-ubuntu:
     name: OI-wiki Undefined Behaviors Test - Ubuntu

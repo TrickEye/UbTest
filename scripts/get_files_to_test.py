@@ -1,6 +1,6 @@
 # Find related files to conduct correctness check and undefined behavior checks.
 # input: changed files (from tj-actions/changed-files, read from res.txt)
-# output: related files to test (write to files_to_test.txt)
+# output: related files to test (write to $GITHUB_OUTPUT, access by setting env to the output and with os.environ.get())
 
 import os
 
@@ -51,7 +51,7 @@ def get_files_to_test(filenames):
         skiptest.append(temp_skiptest)
         with open(os.environ.get("GITHUB_OUTPUT"), 'w') as f:
             print(f'mainfiles={mainfiles}, auxfiles={auxfiles}, examples={examples}, skiptest={skiptest}')
-            f.write(f'files_to_test={(mainfile, auxfiles, examples, skiptest)}')
+            f.write(f'files_to_test={(mainfiles, auxfiles, examples, skiptest)}')
 
 with open("res.txt") as file_object:
     lines = file_object.readlines()
