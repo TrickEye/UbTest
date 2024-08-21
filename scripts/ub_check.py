@@ -87,10 +87,7 @@ summary = ''
 
 cnt_ac, cnt_error, cnt_skip = 0, 0, 0
 for mainfile, auxfile, example, skiptest in zip(mainfiles, auxfiles, examples, skiptests):
-    checkres, summary = ub_check(mainfile, auxfile, example, skiptest, summary)
-    cnt_ac = cnt_ac + 1 if checkres == ACCEPTED else cnt_ac
-    cnt_error = cnt_error + 1 if checkres == ERROR else cnt_error
-    cnt_skip = cnt_skip + 1 if checkres == SKIPPED else cnt_skip
+    checkres, summary = ub_check(mainfile, auxfile, example, skiptest)
 
 with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
     f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n\n')
