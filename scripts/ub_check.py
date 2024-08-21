@@ -24,13 +24,15 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     Check for undefined behavior.
     """
 
-    print(f"::group::Test for {mainfile}...")
+    # print(f"::group::Test for {mainfile}...")
+    print(f"Test for {mainfile}...")
     # 是否跳过测试
     if skiptest:
-        summary += f'- {mainfile}\n\t- 测试跳过\n'
+        # summary += f'- {mainfile}\n\t- 测试跳过\n'
         print(f'{BLUE}test skipped because file {mainfile + ".skip_test"} exists{RESET}')
-        print(f'::endgroup::')
-        return SKIPPED, summary
+        return ['SKIPPED']
+        # print(f'::endgroup::')
+        # return SKIPPED, summary
     
     # 编译指令和编译产物
     compile_commands = [f'clang++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
@@ -80,17 +82,16 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         return_status[compile_product] = status_vector
 
     # do something!
-    return ACCEPTED, summary
+    return return_status
 
 mainfiles, auxfiles, examples, skiptests = eval(os.environ.get("FILES_TO_TEST"))
-summary = ''
 
 cnt_ac, cnt_error, cnt_skip = 0, 0, 0
 for mainfile, auxfile, example, skiptest in zip(mainfiles, auxfiles, examples, skiptests):
-    checkres, summary = ub_check(mainfile, auxfile, example, skiptest)
+    checkres = ub_check(mainfile, auxfile, example, skiptest)
 
 with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
     f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n\n')
-    f.write(summary)
+    f.write()
     print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n::endgroup::')
 
