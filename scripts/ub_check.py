@@ -38,9 +38,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     compile_commands = [f'clang++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
                         f'clang++ -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O2',
                         f'clang++ -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O3',
-                        f'g++-13 -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O0',
-                        f'g++-13 -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O2',
-                        f'g++-13 -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O3',
+                        f'g++-13 -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC13.O0',
+                        f'g++-13 -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC13.O2',
+                        f'g++-13 -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC13.O3',
     ]
     compile_products = [f'{mainfile.split(".")[0]}.Clang.O0',
                         f'{mainfile.split(".")[0]}.Clang.O2',
@@ -70,15 +70,14 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                     status_vector.append('RE')
                 else:
                     print(f'{GREEN}OK{RESET}')
-
-                print(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', end=' ')
-                result = subprocess.run(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', shell=True)
-                if result.returncode != 0:
-                    print(f'{RED}WA{RESET}')
-                    status_vector.append('WA')
-                else:
-                    print(f'{GREEN}AC{RESET}')
-                    status_vector.append('AC')
+                    print(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', end=' ')
+                    result = subprocess.run(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', shell=True)
+                    if result.returncode != 0:
+                        print(f'{RED}WA{RESET}')
+                        status_vector.append('WA')
+                    else:
+                        print(f'{GREEN}AC{RESET}')
+                        status_vector.append('AC')
         return_status[compile_product] = status_vector
 
     # do something!
