@@ -1,11 +1,23 @@
 import os
+import subprocess
 
 mainfiles, auxfiles, examples, skiptests = eval(os.environ.get("FILES_TO_TEST"))
 runs_on = os.environ.get("RUNS_ON")
 
-ACCEPTED = 1
-ERROR = 0
+ACCEPTED = 0
+ERR_CE = 1
+ERR_RE = 2
+ERR_WA = 3
 SKIPPED = -1
+
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+YELLOW = "\033[0;33m"
+BLUE = "\033[0;34m"
+PURPLE = "\033[0;35m"
+CYAN = "\033[0;36m"
+WHITE = "\033[0;37m"
+RESET = "\033[0m"
 
 def ub_check(mainfile, auxfiles, examples, skiptest):
     """
@@ -15,8 +27,8 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     print(f"::group::Test for {mainfile}...")
     # 是否跳过测试
     if skiptest:
-        summary += f'## 跳过：{mainfile}\n测试因 {mainfile + ".skip_test"} 文件存在而跳过\n\n'
-        print(f'::group::{mainfile}: test skipped')
+        summary += f'- {mainfile}\n\t- 测试跳过\n'
+        print(f'{BLUE}test skipped because file {mainfile + ".skip_test"} exists{RESET}')
         print(f'::endgroup::')
         return SKIPPED, summary
     
@@ -35,6 +47,37 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         f'{mainfile.split(".")[0]}.GCC13.O2',
                         f'{mainfile.split(".")[0]}.GCC13.O3',
     ]
+
+    return_status = {}
+    for compile_command, compile_product in zip(compile_commands, compile_products):
+        print(compile_command, end=' ')
+        result = subprocess.run(compile_command, shell=True)
+        if result.returncode != 0:
+            print(f'{RED}CE({result.returncode}){RESET}')
+            status_vector = ['CE']
+        else: 
+            status_vector = ['Compile OK']
+            print(f'{GREEN}OK{RESET}')
+            for e in examples:
+                print(f'{compile_product} < {e} > {e.replace(".in", ".out")}', end=' ')
+                with open(e, 'r') as fstdin:
+                    with open(e.replace(".in", ".out"), 'w') as fstdout:
+                        result = subprocess.run(f'./{compile_product}', stdin=fstdin, stdout=fstdout, shell=True)
+                if result.returncode != 0:
+                    print(f'{RED}RE({result.returncode})){RESET}')
+                    status_vector.append('RE')
+                else:
+                    print(f'{GREEN}OK{RESET}')
+
+                print(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', end=' ')
+                result = subprocess.run(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', shell=True)
+                if result.returncode != 0:
+                    print(f'{RED}WA{RESET}')
+                    status_vector.append('WA')
+                else:
+                    print(f'{GREEN}AC{RESET}')
+                    status_vector.append('AC')
+        return_status[compile_product] = status_vector
 
     # do something!
     return ACCEPTED, summary
