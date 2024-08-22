@@ -78,8 +78,10 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                     else:
                         print(f'{GREEN}AC{RESET}')
                         status_vector.append('AC')
+        print(f'{compile_product}: {status_vector}\n')
         return_status[compile_product] = status_vector
 
+    print(f'{mainfile}: {return_status}\n')
     # do something!
     return return_status
 
