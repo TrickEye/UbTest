@@ -56,8 +56,13 @@ jobs:
   undefinedbehaviors-ubuntu:
     name: OI-wiki Undefined Behaviors Test - Ubuntu
     needs: correctness
+    if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
+      - name: check output
+        env: 
+          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+        run: echo "${FILES_TO_TEST}"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -79,15 +84,15 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
           pipenv install
-      - name: Install C++
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: sudo apt-get install -y g++
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
-      - name: Check the Code
+      - name: Undefined Behaviors Check
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: pipenv run python scripts/test.py 2> stderr.txt
+        env: 
+          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+          RUNS_ON: ubuntu-latest
+        run: pipenv run python scripts/ub_check_ubuntu.py
 
   undefinedbehaviors-macos:
     name: OI-wiki Undefined Behaviors Test - MacOS
