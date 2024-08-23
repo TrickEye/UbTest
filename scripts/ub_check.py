@@ -56,9 +56,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         result = subprocess.run(compile_command, shell=True)
         if result.returncode != 0:
             print(f'{RED}CE({result.returncode}){RESET}')
-            status_vector = ['CE']
+            status_vector = [f'{RED}CE{RESET}']
         else: 
-            status_vector = ['Compile OK']
+            status_vector = [f'{GREEN}Compile OK{RESET}']
             print(f'{GREEN}OK{RESET}')
             for e in examples:
                 print(f'{compile_product} < {e} > {e.replace(".in", ".out")}', end=' ')
@@ -67,21 +67,21 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         result = subprocess.run(f'./{compile_product}', stdin=fstdin, stdout=fstdout, shell=True)
                 if result.returncode != 0:
                     print(f'{RED}RE({result.returncode})){RESET}')
-                    status_vector.append('RE')
+                    status_vector.append(f'{RED}RE{RESET}')
                 else:
                     print(f'{GREEN}OK{RESET}')
                     print(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', end=' ')
                     result = subprocess.run(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', shell=True)
                     if result.returncode != 0:
                         print(f'{RED}WA{RESET}')
-                        status_vector.append('WA')
+                        status_vector.append(f'{RED}WA{RESET}')
                     else:
                         print(f'{GREEN}AC{RESET}')
-                        status_vector.append('AC')
-        print(f'{compile_product}: {status_vector}\n')
+                        status_vector.append(f'{GREEN}AC{RESET}')
+        print(f'{compile_product.split(os.path.pathsep)[-1]}: {status_vector}')
         return_status[compile_product] = status_vector
 
-    print(f'{mainfile}: {return_status}\n')
+    print(f'{BLUE}{mainfile}: {RESET}\n{"\n".join([key + ": " + return_status[key] for key in return_status])}\n')
     # do something!
     return return_status
 
