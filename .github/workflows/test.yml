@@ -137,5 +137,5 @@ jobs:
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: macos-latest
-        run: pipenv run python scripts/ub_check.py
+        run: pipenv run python scripts/ub_check_macos.py
 

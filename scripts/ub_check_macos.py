@@ -84,12 +84,13 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         print()
         return_status[compile_product] = status_vector
 
-    print(f'{BLUE}{mainfile}: {RESET}')
+    print(f'{BLUE}Result for {mainfile}: {RESET}')
     for key in return_status:
         print(f'-  {key}: ', end='')
         for _ in return_status[key]:
             print(_, end='; ')
         print()
+    print()
     # do something!
     return return_status
 
