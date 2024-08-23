@@ -81,7 +81,8 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         print(f'{compile_product.split(os.path.pathsep)[-1]}: {status_vector}')
         return_status[compile_product] = status_vector
 
-    print(f'{BLUE}{mainfile}: {RESET}\n{"\n".join([key + ": " + return_status[key] for key in return_status])}\n')
+    print(f'{BLUE}{mainfile}: {RESET}')
+    print("\n".join([f'{key}: {return_status[key]}' for key in return_status]))
     # do something!
     return return_status
 
