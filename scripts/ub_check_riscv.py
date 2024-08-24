@@ -38,22 +38,16 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     compile_commands = [f'clang++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
                         f'clang++ -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O2',
                         f'clang++ -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O3',
-                        f'g++-9 -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC9.O0',
-                        f'g++-9 -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC9.O2',
-                        f'g++-9 -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC9.O3',
-                        f'g++-10 -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC10.O0',
-                        f'g++-10 -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC10.O2',
-                        f'g++-10 -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC10.O3',
+                        f'g++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O0',
+                        f'g++ -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O2',
+                        f'g++ -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O3',
     ]
     compile_products = [f'{mainfile.split(".")[0]}.Clang.O0',
                         f'{mainfile.split(".")[0]}.Clang.O2',
                         f'{mainfile.split(".")[0]}.Clang.O3',
-                        f'{mainfile.split(".")[0]}.GCC9.O0',
-                        f'{mainfile.split(".")[0]}.GCC9.O2',
-                        f'{mainfile.split(".")[0]}.GCC9.O3',
-                        f'{mainfile.split(".")[0]}.GCC10.O0',
-                        f'{mainfile.split(".")[0]}.GCC10.O2',
-                        f'{mainfile.split(".")[0]}.GCC10.O3',
+                        f'{mainfile.split(".")[0]}.GCC.O0',
+                        f'{mainfile.split(".")[0]}.GCC.O2',
+                        f'{mainfile.split(".")[0]}.GCC.O3',
     ]
 
     return_status = {}
