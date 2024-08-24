@@ -179,6 +179,9 @@ jobs:
       #   run: |
       #     curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
       #     pipenv install
+      - name: Install Clang
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: apt install -y clang
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
