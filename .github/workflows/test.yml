@@ -187,4 +187,4 @@ jobs:
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: riscv-builders
-        run: python scripts/ub_check_riscv.py
+        run: python3 scripts/ub_check_riscv.py
