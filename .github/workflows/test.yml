@@ -169,26 +169,26 @@ jobs:
             docs/**/*.cpp
             docs/**/*.in
             docs/**/*.ans
-      - uses: actions/setup-python@v5
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          python-version: '3.10'
-          cache: pipenv
+      # - uses: actions/setup-python@v5
+      #   if: steps.changed-files.outputs.any_changed == 'true'
+      #   with:
+      #     python-version: '3.10'
+      #     cache: pipenv
       - name: Install Python dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
           curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
           pipenv install
-      # - name: Install C++
-      #   if: steps.changed-files.outputs.any_changed == 'true'
-      #   run: |
-      #     sudo apt-get install -y gcc-10 g++-10 gcc-9 g++-9
-      # - name: Make the File list
-      #   if: steps.changed-files.outputs.any_changed == 'true'
-      #   run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
-      # - name: Undefined Behaviors Check
-      #   if: steps.changed-files.outputs.any_changed == 'true'
-      #   env: 
-      #     FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-      #     RUNS_ON: ubuntu-latest
-      #   run: pipenv run python scripts/ub_check_ubuntu.py
+      - name: Install C++
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          sudo apt-get install -y gcc-10 g++-10 gcc-9 g++-9
+      - name: Make the File list
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
+      - name: Undefined Behaviors Check
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env: 
+          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+          RUNS_ON: riscv-builders
+        run: pipenv run python scripts/ub_check_riscv.py
