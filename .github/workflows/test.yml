@@ -227,13 +227,13 @@ jobs:
           pipenv install
       - name: Install Clang, GCC, G++; Detect Toolchains
         if: steps.changed-files.outputs.any_changed == 'true'
+        shell: cmd
         run: |
-          choco install -y llvm
-          choco install -y mingw
+          choco install -y llvm mingw
           clang --version
           g++ --version
-          "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          cl
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cl.exe
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
