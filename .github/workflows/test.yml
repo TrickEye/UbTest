@@ -230,16 +230,19 @@ jobs:
         shell: cmd
         run: |
           choco install -y llvm mingw
+          echo "---------------------------------"
           clang --version
+          echo "---------------------------------"
           g++ --version
+          echo "---------------------------------"
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           cl.exe
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
-      # - name: Undefined Behaviors Check
-      #   if: steps.changed-files.outputs.any_changed == 'true'
-      #   env: 
-      #     FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-      #     RUNS_ON: windows-latest
-      #   run: python scripts/ub_check_windows.py
+      - name: Undefined Behaviors Check
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env: 
+          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+          RUNS_ON: windows-latest
+        run: python scripts/ub_check_windows.py
