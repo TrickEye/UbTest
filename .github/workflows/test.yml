@@ -225,9 +225,14 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
           pipenv install
-      - name: Install Clang
+      - name: Install Clang, GCC, G++; Detect Toolchains
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: choco install -y llvm
+        run: |
+          choco install -y llvm
+          choco install -y mingw
+          clang --version
+          g++ --version
+          cl
       - name: Make the File list
         if: steps.changed-files.outputs.any_changed == 'true'
         run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
