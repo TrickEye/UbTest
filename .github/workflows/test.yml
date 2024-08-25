@@ -162,3 +162,31 @@ jobs:
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: windows-latest
         run: python scripts/ub_check_windows.py
+
+  undefinedbehaviors-alpine:
+    name: UB Test - Alpine
+    needs: correctness
+    if: ${{ needs.correctness.outputs.any_changed == 'true' }}
+    runs-on: ubuntu-latest
+    container: alpine:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Clang
+        if: needs.correctness.outputs.any_changed == 'true'
+        run: |
+          echo "::group::Install GCC, Clang"
+          apk add build-base llvm clang
+          echo "::endgroup::"
+          echo "::group::Check G++ Version"
+          g++ --version
+          echo "::endgroup::"
+          echo "::group::Check Clang Version"
+          clang --version
+          echo "::endgroup::"
+      # - name: Undefined Behaviors Check
+      #   env: 
+      #     FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+      #     RUNS_ON: alpine-latest
+      #   run: python3 scripts/ub_check_alpine.py
