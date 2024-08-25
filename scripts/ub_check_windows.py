@@ -34,7 +34,7 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         # print(f'::endgroup::')
         # return SKIPPED, summary
     
-    CALL_VCVARS_BAT = 'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"'
+    CALL_VCVARS_BAT = r'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"'
     # 编译指令和编译产物
     compile_commands = [f'clang++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
                         f'clang++ -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O2',
