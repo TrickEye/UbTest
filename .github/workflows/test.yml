@@ -54,194 +54,110 @@ jobs:
         run: pipenv run python scripts/correctness_check.py
 
   undefinedbehaviors-ubuntu:
-    name: OI-wiki Undefined Behaviors Test - Ubuntu
+    name: UB Test - Ubuntu
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: check output
-        env: 
-          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-        run: echo "${FILES_TO_TEST}"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Get changed code files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-          files: |
-            docs/**/*.cpp
-            docs/**/*.in
-            docs/**/*.ans
-      - uses: actions/setup-python@v5
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          python-version: '3.10'
-          cache: pipenv
-      - name: Install Python dependencies
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Install GCC, G++
         run: |
-          curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
-          pipenv install
-      - name: Install GCC, G++, and Musl Toolchains
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
+          echo "::group::Install GCC, G++"
           sudo apt-get install -y gcc-10 g++-10 gcc-9 g++-9
+          echo "::endgroup::"
+          echo "::group::Check G++-10 Version"
           g++-10 --version
+          echo "::endgroup::"
+          echo "::group::Check G++-9 Version"
           g++-9 --version
-      - name: Make the File list
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
+          echo "::endgroup::"
       - name: Undefined Behaviors Check
-        if: steps.changed-files.outputs.any_changed == 'true'
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: ubuntu-latest
-        run: pipenv run python scripts/ub_check_ubuntu.py
+        run: python3 scripts/ub_check_ubuntu.py
 
   undefinedbehaviors-macos:
-    name: OI-wiki Undefined Behaviors Test - MacOS
+    name: UB Test - MacOS
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: macos-latest
     steps:
-      - name: check output
-        env: 
-          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-        run: echo "${FILES_TO_TEST}"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Get changed code files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-          files: |
-            docs/**/*.cpp
-            docs/**/*.in
-            docs/**/*.ans
-      - uses: actions/setup-python@v5
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          python-version: '3.10'
-          cache: pipenv
-      - name: Install Python dependencies
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
-          pipenv install
       - name: Install C++
-        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
+          echo "::group::Install GCC"
           brew install gcc@14
-      - name: g++ Version
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: | 
+          echo "::endgroup::"
+          echo "::group::Check G++ Version"
           g++-14 --version
+          echo "::endgroup::"
+          echo "::group::Check Clang Version"
           clang --version
-      - name: Make the File list
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
+          echo "::endgroup::"
       - name: Undefined Behaviors Check
-        if: steps.changed-files.outputs.any_changed == 'true'
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: macos-latest
-        run: pipenv run python scripts/ub_check_macos.py
+        run: python3 scripts/ub_check_macos.py
 
   undefinedbehaviors-rv:
-    name: OI-wiki Undefined Behaviors Test - RISC-V
+    name: UB Test - RISC-V
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: riscv-builders
     steps:
-      - name: check output
-        env: 
-          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-        run: echo "${FILES_TO_TEST}"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Get changed code files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-          files: |
-            docs/**/*.cpp
-            docs/**/*.in
-            docs/**/*.ans
-      # - uses: actions/setup-python@v5
-      #   if: steps.changed-files.outputs.any_changed == 'true'
-      #   with:
-      #     python-version: '3.10'
-      #     cache: pipenv
-      # - name: Install Python dependencies
-      #   if: steps.changed-files.outputs.any_changed == 'true'
-      #   run: |
-      #     curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
-      #     pipenv install
       - name: Install Clang
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: apt install -y clang
-      - name: Make the File list
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
+        if: needs.correctness.outputs.any_changed == 'true'
+        run: |
+          echo "::group::Install Clang"
+          apt install -y clang
+          echo "::endgroup::"
+          echo "::group::Check G++ Version"
+          g++ --version
+          echo "::endgroup::"
+          echo "::group::Check Clang Version"
+          clang --version
+          echo "::endgroup::"
       - name: Undefined Behaviors Check
-        if: steps.changed-files.outputs.any_changed == 'true'
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: riscv-builders
         run: python3 scripts/ub_check_riscv.py
 
   undefinedbehaviors-windows:
-    name: OI-wiki Undefined Behaviors Test - Windows
+    name: UB Test - Windows
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: windows-latest
     steps:
-      - name: check output
-        env: 
-          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-        run: echo "${FILES_TO_TEST}"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Get changed code files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-          files: |
-            docs/**/*.cpp
-            docs/**/*.in
-            docs/**/*.ans
-      - uses: actions/setup-python@v5
-        if: steps.changed-files.outputs.any_changed == 'true'
-        with:
-          python-version: '3.10'
-          cache: pipenv
-      - name: Install Python dependencies
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python3
-          pipenv install
-      - name: Install Clang, GCC, G++; Detect Toolchains
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Install Clang, GCC, G++
         shell: cmd
         run: |
+          echo ::group::Install Clang, MinGW
           choco install -y llvm mingw
-          echo "---------------------------------"
+          echo ::endgroup::
+          echo ::group::Check Clang Version
           clang --version
-          echo "---------------------------------"
+          echo ::endgroup::
+          echo ::group::Check G++ Version
           g++ --version
-          echo "---------------------------------"
+          echo ::endgroup::
+          echo ::group::Check MSVC Version
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           cl.exe
-      - name: Make the File list
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: echo "${{ steps.changed-files.outputs.all_changed_files }}" > res.txt
+          echo ::endgroup::
       - name: Undefined Behaviors Check
-        if: steps.changed-files.outputs.any_changed == 'true'
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: windows-latest
