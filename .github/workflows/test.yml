@@ -136,7 +136,7 @@ jobs:
       - name: Install QEMU
         run: |
           echo "::group::Install QEMU"
-          apt install qemu-system qemu-utils
+          sudo apt install qemu-system qemu-utils
           echo "::endgroup::"
           echo "::group::Download RISC-V Ubuntu Image"
           curl https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04-preinstalled-server-riscv64.img.xz -o ubuntu-24.04-preinstalled-server-riscv64.img.xz
