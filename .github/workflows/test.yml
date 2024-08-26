@@ -169,6 +169,10 @@ jobs:
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
     container: alpine:latest
+      # image: alpine:latest
+      # options: --volume $GITHUB_STEP_SUMMARY:/summary.txt
+      # env: 
+      #   GITHUB_STEP_SUMMARY: /summary.txt
     steps:
       - uses: actions/checkout@v4
         with:
@@ -185,8 +189,8 @@ jobs:
           echo "::group::Check Clang Version"
           clang --version
           echo "::endgroup::"
-      # - name: Undefined Behaviors Check
-      #   env: 
-      #     FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-      #     RUNS_ON: alpine-latest
-      #   run: python3 scripts/ub_check_alpine.py
+      - name: Undefined Behaviors Check
+        env: 
+          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+          RUNS_ON: alpine-latest
+        run: python3 scripts/ub_check_alpine.py
