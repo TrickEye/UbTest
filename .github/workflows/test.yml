@@ -133,16 +133,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install QEMU
+      - name: Cache RISC-V Ubuntu Image
+        id: cache-image
+        uses: actions/cache@v4
+        with:
+          path: ubuntu-24.04-preinstalled-server-riscv64.img
+          key: riscv-image
+      
+      - name: Download and Prepare RISC-V Ubuntu Image
+        if: steps.cache-image.outputs.cache-hit != 'true'
         run: |
-          echo "::group::Install QEMU"
-          sudo apt install qemu-system qemu-utils
-          echo "::endgroup::"
-          echo "::group::Download RISC-V Ubuntu Image"
           curl https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04-preinstalled-server-riscv64.img.xz -o ubuntu-24.04-preinstalled-server-riscv64.img.xz
           xz -dk ubuntu-24.04-preinstalled-server-riscv64.img.xz
           qemu-img resize -f raw ubuntu-24.04-preinstalled-server-riscv64.img +1G
-          echo "::endgroup::"
+
+      - name: Install QEMU
+        run: |
+          sudo apt install qemu-system qemu-utils
 
   undefinedbehaviors-windows:
     name: UB Test - Windows
