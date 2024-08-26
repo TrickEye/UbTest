@@ -28,11 +28,8 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     print(f"Test for {mainfile}...")
     # 是否跳过测试
     if skiptest:
-        # summary += f'- {mainfile}\n\t- 测试跳过\n'
         print(f'{BLUE}test skipped because file {mainfile + ".skip_test"} exists{RESET}')
         return ['SKIPPED']
-        # print(f'::endgroup::')
-        # return SKIPPED, summary
     
     # 编译指令和编译产物
     compile_commands = [f'clang++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
@@ -57,11 +54,13 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     ]
 
     return_status = {}
+    this_file_looks_odd = False
     for compile_command, compile_product in zip(compile_commands, compile_products):
         print(compile_command, end=' ')
         result = subprocess.run(compile_command, shell=True)
         if result.returncode != 0:
             print(f'{RED}CE({result.returncode}){RESET}')
+            this_file_looks_odd = True
             status_vector = [f'{RED}CE{RESET}']
         else: 
             status_vector = [f'{GREEN}Compile OK{RESET}']
@@ -73,6 +72,7 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         result = subprocess.run(f'./{compile_product}', stdin=fstdin, stdout=fstdout, shell=True)
                 if result.returncode != 0:
                     print(f'{RED}RE({result.returncode})){RESET}')
+                    this_file_looks_odd = True
                     status_vector.append(f'{RED}RE{RESET}')
                 else:
                     print(f'{GREEN}OK{RESET}')
@@ -80,6 +80,7 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                     result = subprocess.run(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', shell=True)
                     if result.returncode != 0:
                         print(f'{RED}WA{RESET}')
+                        this_file_looks_odd = True
                         status_vector.append(f'{RED}WA{RESET}')
                     else:
                         print(f'{GREEN}AC{RESET}')
@@ -91,22 +92,26 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         return_status[compile_product] = status_vector
 
     print(f'{BLUE}Result for {mainfile}: {RESET}')
+    if this_file_looks_odd:
+        print(f'::error file={mainfile},title=疑似UB::{RED}请核实该文件是否存在未定义行为{RESET}')
     for key in return_status:
         print(f'-  {key}: ', end='')
         for _ in return_status[key]:
             print(_, end='; ')
         print()
     print()
-    # do something!
-    return return_status
+    return this_file_looks_odd, return_status
 
 mainfiles, auxfiles, examples, skiptests = eval(os.environ.get("FILES_TO_TEST"))
 
-cnt_ac, cnt_error, cnt_skip = 0, 0, 0
+cnt_ac, cnt_error = 0, 0
 for mainfile, auxfile, example, skiptest in zip(mainfiles, auxfiles, examples, skiptests):
-    checkres = ub_check(mainfile, auxfile, example, skiptest)
+    suspect, ret = ub_check(mainfile, auxfile, example, skiptest)
+    if suspect:
+        cnt_error += 1
+    else:
+        cnt_ac += 1
 
 with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
-    f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n\n')
-    print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n::endgroup::')
-
+    f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n\n')
+    print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n::endgroup::')
