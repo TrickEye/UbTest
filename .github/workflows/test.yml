@@ -90,9 +90,6 @@ jobs:
           fetch-depth: 0
       - name: Install C++
         run: |
-          echo "::group::Install GCC"
-          brew install gcc@14
-          echo "::endgroup::"
           echo "::group::Check G++ Version"
           g++-14 --version
           echo "::endgroup::"
@@ -109,28 +106,43 @@ jobs:
     name: UB Test - RISC-V
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
-    runs-on: riscv-builders
+    # runs-on: riscv-builders
+    # steps:
+    #   - uses: actions/checkout@v4
+    #     with:
+    #       fetch-depth: 0
+    #   - name: Install Clang
+    #     if: needs.correctness.outputs.any_changed == 'true'
+    #     run: |
+    #       echo "::group::Install Clang"
+    #       apt install -y clang
+    #       echo "::endgroup::"
+    #       echo "::group::Check G++ Version"
+    #       g++ --version
+    #       echo "::endgroup::"
+    #       echo "::group::Check Clang Version"
+    #       clang --version
+    #       echo "::endgroup::"
+    #   - name: Undefined Behaviors Check
+    #     env: 
+    #       FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
+    #       RUNS_ON: riscv-builders
+    #     run: python3 scripts/ub_check_riscv.py
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install Clang
-        if: needs.correctness.outputs.any_changed == 'true'
+      - name: Install QEMU
         run: |
-          echo "::group::Install Clang"
-          apt install -y clang
+          echo "::group::Install QEMU"
+          apt install qemu-system qemu-utils
           echo "::endgroup::"
-          echo "::group::Check G++ Version"
-          g++ --version
+          echo "::group::Download RISC-V Ubuntu Image"
+          curl https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04-preinstalled-server-riscv64.img.xz -o ubuntu-24.04-preinstalled-server-riscv64.img.xz
+          xz -dk ubuntu-24.04-preinstalled-server-riscv64.img.xz
+          qemu-img resize -f raw ubuntu-24.04-preinstalled-server-riscv64.img +1G
           echo "::endgroup::"
-          echo "::group::Check Clang Version"
-          clang --version
-          echo "::endgroup::"
-      - name: Undefined Behaviors Check
-        env: 
-          FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-          RUNS_ON: riscv-builders
-        run: python3 scripts/ub_check_riscv.py
 
   undefinedbehaviors-windows:
     name: UB Test - Windows
@@ -169,10 +181,6 @@ jobs:
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
     container: alpine:latest
-      # image: alpine:latest
-      # options: --volume $GITHUB_STEP_SUMMARY:/summary.txt
-      # env: 
-      #   GITHUB_STEP_SUMMARY: /summary.txt
     steps:
       - uses: actions/checkout@v4
         with:
