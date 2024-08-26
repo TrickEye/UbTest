@@ -148,6 +148,9 @@ jobs:
           curl https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04-preinstalled-server-riscv64.img.xz -o ubuntu-24.04-preinstalled-server-riscv64.img.xz
           xz -dk ubuntu-24.04-preinstalled-server-riscv64.img.xz
           qemu-img resize -f raw ubuntu-24.04-preinstalled-server-riscv64.img +1G
+      - name: Run RISC-V Ubuntu Image
+        run: |
+          qemu-system-riscv64 -m 4G -hda ubuntu-24.04-preinstalled-server-riscv64.img -nographic -smp 4 -machine virt
 
 
   undefinedbehaviors-windows:
