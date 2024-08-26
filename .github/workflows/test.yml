@@ -139,7 +139,9 @@ jobs:
         with:
           path: ubuntu-24.04-preinstalled-server-riscv64.img
           key: riscv-image
-      
+      - name: Install QEMU
+        run: |
+          sudo apt install qemu-system qemu-utils
       - name: Download and Prepare RISC-V Ubuntu Image
         if: steps.cache-image.outputs.cache-hit != 'true'
         run: |
@@ -147,9 +149,6 @@ jobs:
           xz -dk ubuntu-24.04-preinstalled-server-riscv64.img.xz
           qemu-img resize -f raw ubuntu-24.04-preinstalled-server-riscv64.img +1G
 
-      - name: Install QEMU
-        run: |
-          sudo apt install qemu-system qemu-utils
 
   undefinedbehaviors-windows:
     name: UB Test - Windows
