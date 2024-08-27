@@ -106,51 +106,26 @@ jobs:
     name: UB Test - RISC-V
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
-    # runs-on: riscv-builders
-    # steps:
-    #   - uses: actions/checkout@v4
-    #     with:
-    #       fetch-depth: 0
-    #   - name: Install Clang
-    #     if: needs.correctness.outputs.any_changed == 'true'
-    #     run: |
-    #       echo "::group::Install Clang"
-    #       apt install -y clang
-    #       echo "::endgroup::"
-    #       echo "::group::Check G++ Version"
-    #       g++ --version
-    #       echo "::endgroup::"
-    #       echo "::group::Check Clang Version"
-    #       clang --version
-    #       echo "::endgroup::"
-    #   - name: Undefined Behaviors Check
-    #     env: 
-    #       FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
-    #       RUNS_ON: riscv-builders
-    #     run: python3 scripts/ub_check_riscv.py
     runs-on: ubuntu-latest
+    container: 
+      image: ubuntu:latest
+      options: --platform risv64
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cache RISC-V Ubuntu Image
-        id: cache-image
-        uses: actions/cache@v4
-        with:
-          path: ubuntu-24.04-preinstalled-server-riscv64.img
-          key: riscv-image
-      - name: Install QEMU
+      - name: Install GCC, G++
         run: |
-          sudo apt install qemu-system qemu-utils
-      - name: Download and Prepare RISC-V Ubuntu Image
-        if: steps.cache-image.outputs.cache-hit != 'true'
-        run: |
-          curl https://cdimage.ubuntu.com/releases/24.04/release/ubuntu-24.04-preinstalled-server-riscv64.img.xz -o ubuntu-24.04-preinstalled-server-riscv64.img.xz
-          xz -dk ubuntu-24.04-preinstalled-server-riscv64.img.xz
-          qemu-img resize -f raw ubuntu-24.04-preinstalled-server-riscv64.img +1G
-      - name: Run RISC-V Ubuntu Image
-        run: |
-          qemu-system-riscv64 -m 4G -hda ubuntu-24.04-preinstalled-server-riscv64.img -nographic -smp 4 -machine virt
+          echo "::group::Install GCC, G++, Clang"
+          sudo apt-get update
+          sudo apt-get install -y gcc g++ clang
+          echo "::endgroup::"
+          echo "::group::Check G++ Version"
+          g++ --version
+          echo "::endgroup::"
+          echo "::group::Check Clang Version"
+          clang --version
+          echo "::endgroup::"
 
 
   undefinedbehaviors-windows:
@@ -195,7 +170,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Clang
-        if: needs.correctness.outputs.any_changed == 'true'
         run: |
           echo "::group::Install Python, GCC, Clang"
           apk add build-base python3 llvm clang
