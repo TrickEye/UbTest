@@ -109,7 +109,7 @@ jobs:
     runs-on: ubuntu-latest
     container: 
       image: ubuntu:latest
-      options: --platform risv64
+      options: --platform riscv64
     steps:
       - uses: actions/checkout@v4
         with:
