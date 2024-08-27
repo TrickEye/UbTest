@@ -115,7 +115,7 @@ jobs:
         run: |
           docker pull --platform riscv64 ubuntu:latest
           docker run --rm --privileged multiarch/qemu-user-static:register --reset
-          docker run --platform riscv64 -t ubuntu:latest uname -a
+          docker run --rm --platform riscv64 ubuntu:latest echo "hello from riscv"
       # - name: Install GCC, G++
       #   run: |
       #     echo "::group::Install GCC, G++, Clang"
