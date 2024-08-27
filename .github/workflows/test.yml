@@ -80,7 +80,7 @@ jobs:
         run: python3 scripts/ub_check_ubuntu.py
 
   undefinedbehaviors-macos:
-    name: UB Test - Arm64 MacOS
+    name: UB Check - Arm64 MacOS
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: macos-latest
@@ -103,7 +103,7 @@ jobs:
         run: python3 scripts/ub_check_macos.py
 
   undefinedbehaviors-rv:
-    name: UB Test - RISC-V Ubuntu
+    name: UB Check - RISC-V Ubuntu
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
@@ -143,7 +143,7 @@ jobs:
 
 
   undefinedbehaviors-windows:
-    name: UB Test - x86_64 Windows
+    name: UB Check - x86_64 Windows
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: windows-latest
@@ -174,7 +174,7 @@ jobs:
         run: python scripts/ub_check_windows.py
 
   undefinedbehaviors-alpine:
-    name: UB Test - x86_64 Alpine
+    name: UB Check - x86_64 Alpine
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest

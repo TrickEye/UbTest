@@ -109,3 +109,6 @@ for mainfile, auxfile, example, skiptest in zip(mainfiles, auxfiles, examples, s
 with open('github_step_summary.txt', 'w') as f:
     f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n\n')
     print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n::endgroup::')
+
+if cnt_error:
+    exit(1)
