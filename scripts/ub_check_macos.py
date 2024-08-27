@@ -38,9 +38,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         f'g++-13 -std=c++14 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC13.O0',
                         f'g++-13 -std=c++14 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC13.O2',
                         f'g++-13 -std=c++14 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC13.O3',
-                        f'g++-13 -std=gnu20 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU20.GCC13.O0',
-                        f'g++-13 -std=gnu20 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU20.GCC13.O2',
-                        f'g++-13 -std=gnu20 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU20.GCC13.O3',
+                        f'g++-13 -std=gnu11 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU11.GCC13.O0',
+                        f'g++-13 -std=gnu11 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU11.GCC13.O2',
+                        f'g++-13 -std=gnu11 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU11.GCC13.O3',
     ]
     compile_products = [f'{mainfile.split(".")[0]}.Clang.O0',
                         f'{mainfile.split(".")[0]}.Clang.O2',
@@ -48,9 +48,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         f'{mainfile.split(".")[0]}.CPP14.GCC13.O0',
                         f'{mainfile.split(".")[0]}.CPP14.GCC13.O2',
                         f'{mainfile.split(".")[0]}.CPP14.GCC13.O3',
-                        f'{mainfile.split(".")[0]}.GNU20.GCC13.O0',
-                        f'{mainfile.split(".")[0]}.GNU20.GCC13.O2',
-                        f'{mainfile.split(".")[0]}.GNU20.GCC13.O3',
+                        f'{mainfile.split(".")[0]}.GNU11.GCC13.O0',
+                        f'{mainfile.split(".")[0]}.GNU11.GCC13.O2',
+                        f'{mainfile.split(".")[0]}.GNU11.GCC13.O3',
     ]
 
     return_status = {}

@@ -38,9 +38,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         f'g++-11 -std=c++14 -O0 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC11.O0',
                         f'g++-11 -std=c++14 -O2 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC11.O2', # NOI 2023
                         f'g++-11 -std=c++14 -O3 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC11.O3',
-                        f'g++-11 -std=gnu20 -O0 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU20.GCC11.O0',
-                        f'g++-11 -std=gnu20 -O2 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU20.GCC11.O2', # ACM ICPC 2023
-                        f'g++-11 -std=gnu20 -O3 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU20.GCC11.O3', 
+                        f'g++-11 -std=gnu11 -O0 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU11.GCC11.O0',
+                        f'g++-11 -std=gnu11 -O2 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU11.GCC11.O2', # ACM ICPC 2023
+                        f'g++-11 -std=gnu11 -O3 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GNU11.GCC11.O3', 
                         f'g++-13 -std=c++14 -O0 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC13.O0',
                         f'g++-13 -std=c++14 -O2 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC13.O2',
                         f'g++-13 -std=c++14 -O3 -static {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.CPP14.GCC13.O3',
@@ -51,9 +51,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                         f'{mainfile.split(".")[0]}.CPP14.GCC11.O0',
                         f'{mainfile.split(".")[0]}.CPP14.GCC11.O2',
                         f'{mainfile.split(".")[0]}.CPP14.GCC11.O3',
-                        f'{mainfile.split(".")[0]}.GNU20.GCC11.O0',
-                        f'{mainfile.split(".")[0]}.GNU20.GCC11.O2',
-                        f'{mainfile.split(".")[0]}.GNU20.GCC11.O3',
+                        f'{mainfile.split(".")[0]}.GNU11.GCC11.O0',
+                        f'{mainfile.split(".")[0]}.GNU11.GCC11.O2',
+                        f'{mainfile.split(".")[0]}.GNU11.GCC11.O3',
                         f'{mainfile.split(".")[0]}.CPP14.GCC13.O0',
                         f'{mainfile.split(".")[0]}.CPP14.GCC13.O2',
                         f'{mainfile.split(".")[0]}.CPP14.GCC13.O3',
