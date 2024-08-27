@@ -113,14 +113,15 @@ jobs:
           fetch-depth: 0
       - name: Pull image
         run: |
-          docker pull --platform riscv64 ubuntu:latest
+          docker pull --platform riscv64 ghcr.io/trickeye/ubtest:latest
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker run -d --name ubtest --platform riscv64 ubuntu:latest sleep infinity
+          docker run -d --name ubtest --platform riscv64 ghcr.io/trickeye/ubtest:latest sleep infinity
           docker exec ubtest uname -a
       - name: Install GCC, G++, Clang
         run: |
-          docker exec ubtest apt-get update
-          docker exec ubtest apt-get install -y gcc g++ clang python3
+          docker exec ubtest gcc --version
+          docker exec ubtest g++ --version
+          docker exec ubtest clang++ --version
       # - name: Install GCC, G++
       #   run: |
       #     echo "::group::Install GCC, G++, Clang"
