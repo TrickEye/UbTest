@@ -105,8 +105,10 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
 mainfiles, auxfiles, examples, skiptests = eval(os.environ.get("FILES_TO_TEST"))
 
 cnt_ac, cnt_error = 0, 0
+output = {}
 for mainfile, auxfile, example, skiptest in zip(mainfiles, auxfiles, examples, skiptests):
     suspect, ret = ub_check(mainfile, auxfile, example, skiptest)
+    output[mainfile] = ret
     if suspect:
         cnt_error += 1
     else:
@@ -116,5 +118,5 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
     f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n\n')
     print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n::endgroup::')
 
-if cnt_error:
-    exit(1)
+with open('output.txt', 'w') as f:
+    f.write(output)

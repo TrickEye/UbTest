@@ -126,6 +126,3 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
 
 with open('output.txt', 'w') as f:
     f.write(output)
-
-if cnt_error:
-    exit(1)

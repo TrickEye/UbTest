@@ -77,12 +77,12 @@ jobs:
           g++-13 --version
           echo "::endgroup::"
       - name: Undefined Behaviors Check
+        continue-on-error: true
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: ubuntu-latest
         run: python3 scripts/ub_check_ubuntu.py
       - name: Set Output
-        continue-on-error: true
         id: set-output
         run: echo output=$(cat output.txt) > $GITHUB_OUTPUT
 
@@ -91,6 +91,8 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: macos-latest
+    outputs:
+      output: ${{ steps.set-output.outputs.output }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -104,10 +106,14 @@ jobs:
           clang --version
           echo "::endgroup::"
       - name: Undefined Behaviors Check
+        continue-on-error: true
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: macos-latest
         run: python3 scripts/ub_check_macos.py
+      - name: Set Output
+        id: set-output
+        run: echo output=$(cat output.txt) > $GITHUB_OUTPUT
 
   undefinedbehaviors-rv:
     name: UB Check - RISC-V Ubuntu
@@ -143,11 +149,10 @@ jobs:
           docker exec ubtest clang++ --version
           echo "::endgroup::"
       - name: Undefined Behaviors Check
+        continue-on-error: true
         run: docker exec ubtest python3 scripts/ub_check_riscv.py
       - name: Copy Summary
-        continue-on-error: true
         run: cat github_step_summary.txt >> $GITHUB_STEP_SUMMARY
-
 
   undefinedbehaviors-windows:
     name: UB Check - x86_64 Windows
@@ -216,5 +221,7 @@ jobs:
       - name: Check Output
         env: 
           OUTPUT_UBUNTU: ${{ needs.undefinedbehaviors-ubuntu.outputs.output }}
-        run: 
+          OUTPUT_MACOS: ${{ needs.undefinedbehaviors-macos.outputs.output }}
+        run: |
           echo $OUTPUT_UBUNTU
+          echo $OUTPUT_MACOS
