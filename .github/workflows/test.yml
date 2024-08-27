@@ -108,7 +108,7 @@ jobs:
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
     container: 
-      image: ubuntu:latest
+      image: riscv64/ubuntu
       options: --platform riscv64
     steps:
       - uses: actions/checkout@v4
