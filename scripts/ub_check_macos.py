@@ -119,4 +119,4 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
     print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_error} may include UB\n::endgroup::')
 
 with open('output.txt', 'w') as f:
-    f.write(output)
+    f.write(str(output))

@@ -84,7 +84,7 @@ jobs:
         run: python3 scripts/ub_check_ubuntu.py
       - name: Set Output
         id: set-output
-        run: echo output=$(cat output.txt) > $GITHUB_OUTPUT
+        run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
 
   undefinedbehaviors-macos:
     name: UB Check - Arm64 MacOS
@@ -113,7 +113,7 @@ jobs:
         run: python3 scripts/ub_check_macos.py
       - name: Set Output
         id: set-output
-        run: echo output=$(cat output.txt) > $GITHUB_OUTPUT
+        run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
 
   undefinedbehaviors-rv:
     name: UB Check - RISC-V Ubuntu
