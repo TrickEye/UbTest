@@ -114,7 +114,7 @@ jobs:
       - name: Pull image
         run: |
           docker pull --platform riscv64 ubuntu:latest
-          docker run --rm --privileged multiarch/qemu-user-static:register --reset
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           docker run --rm --platform riscv64 ubuntu:latest echo "hello from riscv"
       # - name: Install GCC, G++
       #   run: |
