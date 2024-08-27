@@ -111,7 +111,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Pull image
+      - name: Launch Risc-V Docker
         run: |
           docker pull --platform riscv64 ghcr.io/trickeye/ubtest:latest
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -134,22 +134,8 @@ jobs:
           echo "::group::clang --version"
           docker exec ubtest clang++ --version
           echo "::endgroup::"
-          echo "::group::Check Files"
-          docker exec ubtest ls -la
-          echo "::endgroup::"
-          docker exec ubtest echo HELLOWORLD >> $GITHUB_STEP_SUMMARY
-      # - name: Install GCC, G++
-      #   run: |
-      #     echo "::group::Install GCC, G++, Clang"
-      #     sudo apt-get update
-      #     sudo apt-get install -y gcc g++ clang
-      #     echo "::endgroup::"
-      #     echo "::group::Check G++ Version"
-      #     g++ --version
-      #     echo "::endgroup::"
-      #     echo "::group::Check Clang Version"
-      #     clang --version
-      #     echo "::endgroup::"
+      - name: Undefined Behaviors Check
+        run: docker exec ubtest python3 scripts/ub_check_alpine.py
 
 
   undefinedbehaviors-windows:
