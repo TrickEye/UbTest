@@ -117,10 +117,11 @@ jobs:
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
           docker run -d --name ubtest --platform riscv64 \
             --volume $PWD:/home/ubtest \
+            --volume $GITHUB_STEP_SUMMARY:/home/summary/GH_STEP_SUMMARY \
             --workdir /home/ubtest \
             --env FILES_TO_TEST="${{ needs.correctness.outputs.files_to_test }}" \
             --env RUNS_ON=riscv64 \
-            --env GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY \
+            --env GITHUB_STEP_SUMMARY=/home/summary/GH_STEP_SUMMARY \
             ghcr.io/trickeye/ubtest:latest sleep infinity
           docker exec ubtest uname -a
       - name: Install GCC, G++, Clang
