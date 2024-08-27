@@ -32,12 +32,12 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         return ['SKIPPED']
     
     # 编译指令和编译产物
-    compile_commands = [f'clang++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
-                        f'clang++ -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O2',
-                        f'clang++ -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O3',
-                        f'g++ -std=c++17 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O0',
-                        f'g++ -std=c++17 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O2',
-                        f'g++ -std=c++17 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O3',
+    compile_commands = [f'clang++ -std=c++14 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O0',
+                        f'clang++ -std=c++14 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O2',
+                        f'clang++ -std=c++14 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.Clang.O3',
+                        f'g++ -std=c++14 -O0 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O0',
+                        f'g++ -std=c++14 -O2 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O2',
+                        f'g++ -std=c++14 -O3 {" ".join(auxfiles)} -o {mainfile.split(".")[0]}.GCC.O3',
     ]
     compile_products = [f'{mainfile.split(".")[0]}.Clang.O0',
                         f'{mainfile.split(".")[0]}.Clang.O2',

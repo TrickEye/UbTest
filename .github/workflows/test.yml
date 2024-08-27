@@ -65,13 +65,14 @@ jobs:
       - name: Install GCC, G++
         run: |
           echo "::group::Install GCC, G++"
-          sudo apt-get install -y gcc-10 g++-10 gcc-9 g++-9
+          sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get install -y gcc-11 g++-11 gcc-13 g++-13
           echo "::endgroup::"
           echo "::group::Check G++-10 Version"
-          g++-10 --version
+          g++-11 --version
           echo "::endgroup::"
           echo "::group::Check G++-9 Version"
-          g++-9 --version
+          g++-13 --version
           echo "::endgroup::"
       - name: Undefined Behaviors Check
         env: 
