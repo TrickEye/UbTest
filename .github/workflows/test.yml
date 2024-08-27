@@ -107,25 +107,27 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
-    container: 
-      image: riscv64/ubuntu
-      options: --platform riscv64
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install GCC, G++
+      - name: Pull image
         run: |
-          echo "::group::Install GCC, G++, Clang"
-          sudo apt-get update
-          sudo apt-get install -y gcc g++ clang
-          echo "::endgroup::"
-          echo "::group::Check G++ Version"
-          g++ --version
-          echo "::endgroup::"
-          echo "::group::Check Clang Version"
-          clang --version
-          echo "::endgroup::"
+          docker pull --platform riscv64 ubuntu:latest
+          docker run --rm --privileged multiarch/qemu-user-static:register --reset
+          docker run --platform riscv64 -t ubuntu:latest uname -a
+      # - name: Install GCC, G++
+      #   run: |
+      #     echo "::group::Install GCC, G++, Clang"
+      #     sudo apt-get update
+      #     sudo apt-get install -y gcc g++ clang
+      #     echo "::endgroup::"
+      #     echo "::group::Check G++ Version"
+      #     g++ --version
+      #     echo "::endgroup::"
+      #     echo "::group::Check Clang Version"
+      #     clang --version
+      #     echo "::endgroup::"
 
 
   undefinedbehaviors-windows:
