@@ -126,10 +126,6 @@ jobs:
           docker exec ubtest uname -a
       - name: Install GCC, G++, Clang
         run: |
-          docker exec ubtest echo PWD=$PWD
-          docker exec ubtest echo GSS=$GITHUB_STEP_SUMMARY
-          docker exec ubtest ls
-          docker exec ubtest ls $GITHUB_STEP_SUMMARY/../
           echo "::group::gcc --version"
           docker exec ubtest gcc --version
           echo "::endgroup::"
