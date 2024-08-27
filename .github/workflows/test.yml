@@ -58,6 +58,7 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
+    container: ghcr.io/trickeye/ubuntu_gcc1x:latest
     outputs:
       output: ${{ steps.set-output.outputs.output }}
     steps:
@@ -66,14 +67,10 @@ jobs:
           fetch-depth: 0
       - name: Install GCC, G++
         run: |
-          echo "::group::Install GCC, G++"
-          sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-          sudo apt-get install -y gcc-11 g++-11 gcc-13 g++-13
-          echo "::endgroup::"
-          echo "::group::Check G++-10 Version"
+          echo "::group::Check G++-11 Version"
           g++-11 --version
           echo "::endgroup::"
-          echo "::group::Check G++-9 Version"
+          echo "::group::Check G++-13 Version"
           g++-13 --version
           echo "::endgroup::"
       - name: Undefined Behaviors Check
