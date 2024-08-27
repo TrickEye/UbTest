@@ -134,7 +134,10 @@ jobs:
           echo "::group::clang --version"
           docker exec ubtest clang++ --version
           echo "::endgroup::"
-          docker exec echo HELLOWORLD >> $GITHUB_STEP_SUMMARY
+          echo "::group::Check Files"
+          docker exec ubtest ls -la
+          echo "::endgroup::"
+          docker exec ubtest echo HELLOWORLD >> $GITHUB_STEP_SUMMARY
       # - name: Install GCC, G++
       #   run: |
       #     echo "::group::Install GCC, G++, Clang"
