@@ -137,6 +137,8 @@ jobs:
           echo "::endgroup::"
       - name: Undefined Behaviors Check
         run: docker exec ubtest python3 scripts/ub_check_riscv.py
+      - name: Copy Summary
+        run: cat github_step_summary.txt >> $GITHUB_STEP_SUMMARY
 
 
   undefinedbehaviors-windows:
