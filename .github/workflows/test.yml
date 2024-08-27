@@ -118,8 +118,9 @@ jobs:
           docker run --name ubtest --platform riscv64 ubuntu:latest uname -a
       - name: Install GCC, G++, Clang
         run: |
-          docker start ubtest apt-get update
-          docker start ubtest apt-get install -y gcc g++ clang python3
+          docker start ubtest
+          docker exec ubtest apt-get update
+          docker exec ubtest apt-get install -y gcc g++ clang python3
       # - name: Install GCC, G++
       #   run: |
       #     echo "::group::Install GCC, G++, Clang"
