@@ -115,17 +115,11 @@ jobs:
         run: |
           docker pull --platform riscv64 ubuntu:latest
           docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker run --name ubtest --platform riscv64 ubuntu:latest uname -a
+          docker run -d --name ubtest --platform riscv64 ubuntu:latest sleep infinity
+          docker exec ubtest uname -a
       - name: Install GCC, G++, Clang
         run: |
-          docker ps -a
-          echo "-----------------"
-          docker start ubtest
-          echo "-----------------"
-          docker ps -a
-          echo "-----------------"
           docker exec ubtest apt-get update
-          echo "-----------------"
           docker exec ubtest apt-get install -y gcc g++ clang python3
       # - name: Install GCC, G++
       #   run: |
