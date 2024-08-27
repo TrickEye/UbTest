@@ -100,3 +100,6 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
     f.write(f'# TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n\n')
     f.write(summary)
     print(f'::group::TOTAL {len(mainfiles)} TESTS, {cnt_ac} ACCEPTED, {cnt_skip} SKIPPED, {cnt_error} ERROR\n::endgroup::')
+
+if cnt_error:
+    exit(1)
