@@ -58,6 +58,8 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      output: ${{ steps.set-output.outputs.output }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -79,6 +81,10 @@ jobs:
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: ubuntu-latest
         run: python3 scripts/ub_check_ubuntu.py
+      - name: Set Output
+        continue-on-error: true
+        id: set-output
+        run: echo output=$(cat output.txt) > $GITHUB_OUTPUT
 
   undefinedbehaviors-macos:
     name: UB Check - Arm64 MacOS
@@ -200,3 +206,15 @@ jobs:
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: alpine-latest
         run: python3 scripts/ub_check_alpine.py
+
+  sum-up:
+    name: Sum Up
+    needs: [correctness, undefinedbehaviors-ubuntu, undefinedbehaviors-macos, undefinedbehaviors-rv, undefinedbehaviors-windows, undefinedbehaviors-alpine]
+    if: ${{ needs.correctness.outputs.any_changed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Output
+        env: 
+          OUTPUT_UBUNTU: ${{ needs.undefinedbehaviors-ubuntu.outputs.output }}
+        run: 
+          echo $OUTPUT_UBUNTU
