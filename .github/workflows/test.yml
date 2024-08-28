@@ -109,6 +109,8 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      output: ${{ steps.set-output.outputs.output }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -151,6 +153,8 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: windows-latest
+    outputs:
+      output: ${{ steps.set-output.outputs.output }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -185,6 +189,8 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      output: ${{ steps.set-output.outputs.output }}
     container: alpine:latest
     steps:
       - uses: actions/checkout@v4
@@ -220,6 +226,12 @@ jobs:
         env: 
           OUTPUT_UBUNTU: ${{ needs.undefinedbehaviors-ubuntu.outputs.output }}
           OUTPUT_MACOS: ${{ needs.undefinedbehaviors-macos.outputs.output }}
+          OUTPUT_RV: ${{ needs.undefinedbehaviors-rv.outputs.output }}
+          OUTPUT_WINDOWS: ${{ needs.undefinedbehaviors-windows.outputs.output }}
+          OUTPUT_ALPINE: ${{ needs.undefinedbehaviors-alpine.outputs.output }}
         run: |
           echo $OUTPUT_UBUNTU
           echo $OUTPUT_MACOS
+          echo $OUTPUT_RV
+          echo $OUTPUT_WINDOWS
+          echo $OUTPUT_ALPINE
