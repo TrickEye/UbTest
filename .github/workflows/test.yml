@@ -58,21 +58,13 @@ jobs:
     needs: correctness
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
-    container: ghcr.io/trickeye/ubuntu_gcc1x:latest
+    container: ghcr.io/trickeye/ubuntu_gcc1x:clang
     outputs:
       output: ${{ steps.set-output.outputs.output }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install GCC, G++
-        run: |
-          echo "::group::Check G++-11 Version"
-          g++-11 --version
-          echo "::endgroup::"
-          echo "::group::Check G++-13 Version"
-          g++-13 --version
-          echo "::endgroup::"
       - name: Undefined Behaviors Check
         continue-on-error: true
         env: 
@@ -150,6 +142,9 @@ jobs:
         run: docker exec ubtest python3 scripts/ub_check_riscv.py
       - name: Copy Summary
         run: cat github_step_summary.txt >> $GITHUB_STEP_SUMMARY
+      - name: Set Output
+        id: set-output
+        run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
 
   undefinedbehaviors-windows:
     name: UB Check - x86_64 Windows
@@ -181,6 +176,9 @@ jobs:
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: windows-latest
         run: python scripts/ub_check_windows.py
+      - name: Set Output
+        id: set-output
+        run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
 
   undefinedbehaviors-alpine:
     name: UB Check - x86_64 Alpine
@@ -208,6 +206,9 @@ jobs:
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: alpine-latest
         run: python3 scripts/ub_check_alpine.py
+      - name: Set Output
+        id: set-output
+        run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
 
   sum-up:
     name: Sum Up
