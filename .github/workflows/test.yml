@@ -182,7 +182,7 @@ jobs:
         run: python scripts/ub_check_windows.py
       - name: Set Output
         id: set-output
-        run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
+        run: echo output=$(cat output.txt) >> $GITHUB_OUTPUT
 
   undefinedbehaviors-alpine:
     name: UB Check - x86_64 Alpine
