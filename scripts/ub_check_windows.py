@@ -120,3 +120,5 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
 
 with open('output.txt', 'w') as f:
     f.write(str(output))
+
+os.environ["GITHUB_OUTPUT"] = str(output)
