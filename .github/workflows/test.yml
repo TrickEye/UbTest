@@ -180,6 +180,8 @@ jobs:
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: windows-latest
         run: python scripts/ub_check_windows.py
+      - name: Examine Output
+        run: cat output.txt
       - name: Set Output
         id: set-output
         run: echo output=$(cat output.txt) >> $GITHUB_OUTPUT
