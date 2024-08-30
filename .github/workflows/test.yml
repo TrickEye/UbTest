@@ -179,12 +179,8 @@ jobs:
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: windows-latest
-        run: python scripts/ub_check_windows.py
-      - name: Examine Output
-        run: echo output=$(cat output.txt)
-      - name: Set Output
         id: set-output
-        run: echo output=$(cat output.txt) >> $GITHUB_OUTPUT
+        run: python scripts/ub_check_windows.py
 
   undefinedbehaviors-alpine:
     name: UB Check - x86_64 Alpine
