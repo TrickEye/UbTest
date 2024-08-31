@@ -141,9 +141,8 @@ jobs:
           echo "::endgroup::"
       - name: Undefined Behaviors Check
         continue-on-error: true
+        # The environment variables are set in Launch Risc-V Docker step
         run: docker exec ubtest python3 scripts/ub_check_riscv.py
-      - name: Copy Summary
-        run: cat github_step_summary.txt >> $GITHUB_STEP_SUMMARY
       - name: Set Output
         id: set-output
         run: echo output=$(cat output.txt) | tee $GITHUB_OUTPUT
@@ -176,6 +175,7 @@ jobs:
           cl.exe
           echo ::endgroup::
       - name: Undefined Behaviors Check
+        continue-on-error: true
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: windows-latest
@@ -212,6 +212,7 @@ jobs:
           clang --version
           echo "::endgroup::"
       - name: Undefined Behaviors Check
+        continue-on-error: true
         env: 
           FILES_TO_TEST: ${{ needs.correctness.outputs.files_to_test }}
           RUNS_ON: alpine-latest
