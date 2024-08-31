@@ -70,4 +70,6 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
                 this_file_looks_odd = True
         if this_file_looks_odd:
             any_file_looks_odd = True
-            f.write(f'疑似存在未定义行为，请核实\n')
+            f.write(f'\n疑似存在未定义行为，请核实\n')
+    if any_file_looks_odd:
+        exit(-1)
