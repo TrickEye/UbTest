@@ -19,6 +19,14 @@ CYAN = "\033[0;36m"
 WHITE = "\033[0;37m"
 RESET = "\033[0m"
 
+def get_color(status: str) -> str:
+    if 'AC' in status or 'OK' in status:
+        return GREEN
+    elif 'SKIPPED' in status:
+        return BLUE
+    else:
+        return RED
+
 def ub_check(mainfile, auxfiles, examples, skiptest):
     """
     Check for undefined behavior.
@@ -60,9 +68,9 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
         if result.returncode != 0:
             print(f'{RED}CE({result.returncode}){RESET}')
             this_file_looks_odd = True
-            status_vector = [f'{RED}CE{RESET}']
+            status_vector = [f'CE']
         else: 
-            status_vector = [f'{GREEN}Compile OK{RESET}']
+            status_vector = [f'Compile OK']
             print(f'{GREEN}OK{RESET}')
             for e in examples:
                 print(f'{compile_product} < {e} > {e.replace(".in", ".out")}', end=' ')
@@ -72,7 +80,7 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                 if result.returncode != 0:
                     print(f'{RED}RE({result.returncode})){RESET}')
                     this_file_looks_odd = True
-                    status_vector.append(f'{RED}RE{RESET}')
+                    status_vector.append(f'RE({result.returncode})')
                 else:
                     print(f'{GREEN}OK{RESET}')
                     print(f'diff -b -B {e.replace(".in", ".out")} {e.replace(".in", ".ans")}', end=' ')
@@ -80,13 +88,13 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
                     if result.returncode != 0:
                         print(f'{RED}WA{RESET}')
                         this_file_looks_odd = True
-                        status_vector.append(f'{RED}WA{RESET}')
+                        status_vector.append(f'WA')
                     else:
                         print(f'{GREEN}AC{RESET}')
-                        status_vector.append(f'{GREEN}AC{RESET}')
+                        status_vector.append(f'AC')
         print(f'{compile_product.split(os.path.pathsep)[-1]}: ', end='')
         for _ in status_vector:
-            print(_, end='; ')
+            print(f'{get_color(_)}{_}{RESET}', end='; ')
         print()
         return_status[compile_product] = status_vector
 
@@ -96,7 +104,7 @@ def ub_check(mainfile, auxfiles, examples, skiptest):
     for key in return_status:
         print(f'-  {key}: ', end='')
         for _ in return_status[key]:
-            print(_, end='; ')
+            print(f'{get_color(_)}{_}{RESET}', end='; ')
         print()
     print()
     return this_file_looks_odd, return_status
