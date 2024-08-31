@@ -11,8 +11,8 @@ with open(os.environ.get('GITHUB_STEP_SUMMARY'), 'w') as f:
     for key in OUTPUT_UBUNTU:
         assert all(key in d for d in [OUTPUT_UBUNTU, OUTPUT_MACOS, OUTPUT_ALPINE, OUTPUT_WINDOWS, OUTPUT_RV])
         this_file_looks_odd = False
-        print(f'## {key}\n')
-        f.write(f'## {key}')
+        print(f'\n## {key}\n')
+        f.write(f'\n## **{key}**\n')
         print(f'x86_64 Ubuntu 22.04')
         f.write(f'\nx86_64 Ubuntu 22.04\n')
         for line in OUTPUT_UBUNTU[key]:
