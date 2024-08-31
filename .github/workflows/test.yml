@@ -239,3 +239,6 @@ jobs:
           echo $OUTPUT_RV
           echo $OUTPUT_WINDOWS
           echo $OUTPUT_ALPINE
+      - name: Sum Up
+        run: |
+          python3 scripts/sum_up.py
