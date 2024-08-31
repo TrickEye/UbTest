@@ -225,14 +225,14 @@ jobs:
     needs: [correctness, undefinedbehaviors-ubuntu, undefinedbehaviors-macos, undefinedbehaviors-rv, undefinedbehaviors-windows, undefinedbehaviors-alpine]
     if: ${{ needs.correctness.outputs.any_changed == 'true' }}
     runs-on: ubuntu-latest
+    env: 
+      OUTPUT_UBUNTU: ${{ needs.undefinedbehaviors-ubuntu.outputs.output }}
+      OUTPUT_MACOS: ${{ needs.undefinedbehaviors-macos.outputs.output }}
+      OUTPUT_RV: ${{ needs.undefinedbehaviors-rv.outputs.output }}
+      OUTPUT_WINDOWS: ${{ needs.undefinedbehaviors-windows.outputs.output }}
+      OUTPUT_ALPINE: ${{ needs.undefinedbehaviors-alpine.outputs.output }}
     steps:
       - name: Check Output
-        env: 
-          OUTPUT_UBUNTU: ${{ needs.undefinedbehaviors-ubuntu.outputs.output }}
-          OUTPUT_MACOS: ${{ needs.undefinedbehaviors-macos.outputs.output }}
-          OUTPUT_RV: ${{ needs.undefinedbehaviors-rv.outputs.output }}
-          OUTPUT_WINDOWS: ${{ needs.undefinedbehaviors-windows.outputs.output }}
-          OUTPUT_ALPINE: ${{ needs.undefinedbehaviors-alpine.outputs.output }}
         run: |
           echo $OUTPUT_UBUNTU
           echo $OUTPUT_MACOS
